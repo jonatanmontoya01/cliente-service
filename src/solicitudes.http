@@ -1,0 +1,25 @@
+### 1. Prueba DELETE (Cliente 999 que no existe)
+DELETE http://localhost:8080/api/v1/cliente-service/clientes/999
+
+### 2. Prueba POST con datos inválidos (Debe dar Error 400)
+POST http://localhost:8080/api/v1/cliente-service/clientes
+Content-Type: application/json
+
+{
+  "nombre": "A",
+  "apellido": "",
+  "email": "correoinvalido"
+}
+
+### 3. Prueba POST con datos válidos (Debe dar 201 Created y poner la fecha)
+POST http://localhost:8080/api/v1/cliente-service/clientes
+Content-Type: application/json
+
+{
+  "nombre": "Carlos",
+  "apellido": "Santana",
+  "email": "carlos@musica.com",
+  "region": {
+    "id": 1
+  }
+}

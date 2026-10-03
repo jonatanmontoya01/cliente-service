@@ -1,0 +1,36 @@
+### 1. Prueba Nombre Vacío (Debe retornar 400 Bad Request)
+POST http://localhost:8080/api/v1/cliente-service/clientes
+Content-Type: application/json
+
+{
+  "nombre": "",
+  "apellido": "Torvalds",
+  "email": "linus@linux.org",
+  "region": { "id": 4 }
+}
+
+###
+
+### 2. Prueba Email Inválido (Debe retornar 400 Bad Request)
+POST http://localhost:8080/api/v1/cliente-service/clientes
+Content-Type: application/json
+
+{
+  "nombre": "Linus",
+  "apellido": "Torvalds",
+  "email": "correo-invalido",
+  "region": { "id": 4 }
+}
+
+###
+
+### 3. Prueba Creación Válida (Debe retornar 201 Created y createAt)
+POST http://localhost:8080/api/v1/cliente-service/clientes
+Content-Type: application/json
+
+{
+  "nombre": "Steve",
+  "apellido": "Wozniak",
+  "email": "woz@apple.com",
+  "region": { "id": 3 }
+}
