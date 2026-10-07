@@ -1,7 +1,9 @@
-package clienteservicie.delivery.exception;
+package com.denkitronik.clienteservice.delivery.exception;
 
-import clienteservicie.domain.exception.ClienteNotFoundException;
-import clienteservicie.domain.exception.ClienteServiceException;
+import com.denkitronik.clienteservice.domain.entities.Cliente;
+
+import com.denkitronik.clienteservice.domain.exception.ClienteNotFoundException;
+import com.denkitronik.clienteservice.domain.exception.ClienteServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

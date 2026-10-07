@@ -1,4 +1,4 @@
-package clienteservicie.delivery.exception;
+package com.denkitronik.clienteservice.delivery.exception;
 
 import java.time.LocalDateTime;
 

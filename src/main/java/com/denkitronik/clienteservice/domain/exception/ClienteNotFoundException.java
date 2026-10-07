@@ -1,4 +1,4 @@
-package clienteservicie.domain.exception;
+package com.denkitronik.clienteservice.domain.exception;
 
 public class ClienteNotFoundException extends RuntimeException {
 

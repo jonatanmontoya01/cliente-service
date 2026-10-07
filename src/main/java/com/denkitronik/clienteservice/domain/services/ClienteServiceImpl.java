@@ -1,10 +1,11 @@
-package clienteservicie.domain.services;
+package com.denkitronik.clienteservice.domain.services;
 
-import clienteservicie.domain.exception.ClienteNotFoundException;
-import clienteservicie.domain.exception.ClienteServiceException;
-import clienteservicie.domain.entities.Cliente;
-import clienteservicie.domain.entities.Region;
-import clienteservicie.domain.repositories.IClienteDao;
+import com.denkitronik.clienteservice.domain.entities.Cliente;
+import com.denkitronik.clienteservice.domain.entities.Region;
+import com.denkitronik.clienteservice.domain.exception.ClienteNotFoundException;
+import com.denkitronik.clienteservice.domain.exception.ClienteServiceException;
+import com.denkitronik.clienteservice.domain.repositories.IClienteDao;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -17,19 +18,22 @@ import java.util.List;
 @Service
 public class ClienteServiceImpl implements IClienteService {
 
+    private static final String MSG_DUPLICADOS =
+            "No se pudo guardar el cliente: existen datos duplicados (por ejemplo, el email ya está registrado).";
+
     @Autowired
     private IClienteDao clienteDao;
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Cliente> findAll(Pageable pageable) {
-        return clienteDao.findAll(pageable);
+    public List<Cliente> findAll() {
+        return clienteDao.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Cliente> findAll() {
-        return clienteDao.findAll();
+    public Page<Cliente> findAll(Pageable pageable) {
+        return clienteDao.findAll(pageable);
     }
 
     @Override
@@ -44,27 +48,27 @@ public class ClienteServiceImpl implements IClienteService {
     public Cliente save(Cliente cliente) {
         try {
             return clienteDao.save(cliente);
-        } catch (DataIntegrityViolationException ex) {
-            throw new ClienteServiceException(
-                    "Error al guardar el cliente: datos duplicados o restricción violada",
-                    ex
-            );
+        } catch (DataIntegrityViolationException e) {
+            throw new ClienteServiceException(MSG_DUPLICADOS, e);
         }
     }
 
     @Override
     @Transactional
-    public Cliente update(Long id, Cliente cliente) {
-        Cliente actual = clienteDao.findById(id)
+    public Cliente update(Long id, Cliente datosNuevos) {
+        Cliente existente = clienteDao.findById(id)
                 .orElseThrow(() -> new ClienteNotFoundException(id));
 
-        actual.setNombre(cliente.getNombre());
-        actual.setApellido(cliente.getApellido());
-        actual.setEmail(cliente.getEmail());
-        actual.setFoto(cliente.getFoto());
-        actual.setRegion(cliente.getRegion());
+        existente.setNombre(datosNuevos.getNombre());
+        existente.setApellido(datosNuevos.getApellido());
+        existente.setEmail(datosNuevos.getEmail());
+        existente.setRegion(datosNuevos.getRegion());
 
-        return clienteDao.save(actual);
+        try {
+            return clienteDao.save(existente);
+        } catch (DataIntegrityViolationException e) {
+            throw new ClienteServiceException(MSG_DUPLICADOS, e);
+        }
     }
 
     @Override
