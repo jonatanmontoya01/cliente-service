@@ -27,7 +27,11 @@ services:
       DB_URL: ${DB_URL}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
-      JPA_DDL: ${JPA_DDL}
+      JPA_DDL: update
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      API_VERSION: v1
+      APP_VERSION: 0.2.0
+      SPRING_APPLICATION_NAME: cliente-service
     depends_on:
       postgres:
         condition: service_healthy
