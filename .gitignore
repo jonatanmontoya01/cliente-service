@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+# Archivos de entorno local de Docker (¡NUNCA SUBIR A GITHUB!)
+.env
+.env.local
+.env.*.local

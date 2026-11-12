@@ -1,15 +1,36 @@
 services:
+  # ── Base de datos PostgreSQL ──────────────────────────────────────────────
   postgres:
-    image: postgres:16
-    container_name: postgres-cursos
+    image: postgres:16-alpine
+    container_name: curso_springboot_db
     environment:
-      POSTGRES_USER: devdb
-      POSTGRES_PASSWORD: devdb
-      POSTGRES_DB: devdb
+      POSTGRES_DB: clientedb
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d clientedb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Aplicación Spring Boot ────────────────────────────────────────────────
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JPA_DDL: ${JPA_DDL}
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
-  postgres_data:
+  pgdata:
